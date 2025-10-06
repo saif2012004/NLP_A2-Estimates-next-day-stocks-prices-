@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CS4063 Financial Forecasting App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .form-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+
+        .form-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .input-group label {
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        .input-group select {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-danger {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+
+        .chart-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .forecast-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-card h3 {
+            color: #667eea;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .summary-card .value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .summary-card .change {
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .change.positive {
+            color: #28a745;
+        }
+
+        .change.negative {
+            color: #dc3545;
+        }
+
+        .stats-bar {
+            background: #f8f9fa;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-item .label {
+            color: #777;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .stat-item .value {
+            color: #333;
+            font-size: 1.3em;
+            font-weight: 600;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #777;
+            border-top: 1px solid #ddd;
+        }
+
+        .model-legend {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 4px;
+            border-radius: 2px;
+        }
+
+        .legend-arima { background: #FF6B6B; }
+        .legend-lstm { background: #4ECDC4; }
+        .legend-ensemble { background: #45B7D1; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📈 Financial Forecasting Dashboard</h1>
+            <p>CS4063 Assignment - ARIMA, LSTM & Ensemble Predictions</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <!-- Selection Form -->
+            <div class="form-section">
+                <h2>🎯 Select Instrument & Forecast Horizon</h2>
+                <form method="POST" action="/">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <label for="instrument">📊 Instrument</label>
+                            <select name="instrument" id="instrument" required>
+                                <option value="">-- Select Instrument --</option>
+                                {% for instrument in instruments %}
+                                    <option value="{{ instrument }}" 
+                                        {% if selected_instrument == instrument %}selected{% endif %}>
+                                        {{ instrument }}
+                                        {% if instrument == 'AAPL' %}(Apple Inc.)
+                                        {% elif instrument == 'MSFT' %}(Microsoft Corp.)
+                                        {% elif instrument == 'BTC-USD' %}(Bitcoin)
+                                        {% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="horizon">📅 Forecast Horizon</label>
+                            <select name="horizon" id="horizon" required>
+                                <option value="">-- Select Horizon --</option>
+                                {% for horizon in horizons %}
+                                    <option value="{{ horizon }}" 
+                                        {% if selected_horizon == horizon %}selected{% endif %}>
+                                        {{ horizon }} day{% if horizon > 1 %}s{% endif %}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary">🔮 Generate Forecast</button>
+                    <a href="/init-db" class="btn-secondary" onclick="return confirm('Initialize database? This will load CSV data.')">🔄 Initialize Database</a>
+                </form>
+            </div>
+
+            <!-- Forecast Summary Cards -->
+            {% if forecast_summary %}
+            <div class="forecast-summary">
+                <div class="summary-card">
+                    <h3>Current Price</h3>
+                    <div class="value">${{ "%.2f"|format(forecast_summary.last_price) }}</div>
+                    <div>{{ forecast_summary.instrument }}</div>
+                </div>
+
+                {% if 'arima' in forecast_summary.forecasts %}
+                <div class="summary-card">
+                    <h3>ARIMA Prediction</h3>
+                    <div class="value">${{ "%.2f"|format(forecast_summary.forecasts.arima.final) }}</div>
+                    <div class="change {% if forecast_summary.forecasts.arima.change > 0 %}positive{% else %}negative{% endif %}">
+                        {{ "%.2f"|format(forecast_summary.forecasts.arima.change_pct) }}%
+                        {% if forecast_summary.forecasts.arima.change > 0 %}▲{% else %}▼{% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if 'lstm' in forecast_summary.forecasts %}
+                <div class="summary-card">
+                    <h3>LSTM Prediction</h3>
+                    <div class="value">${{ "%.2f"|format(forecast_summary.forecasts.lstm.final) }}</div>
+                    <div class="change {% if forecast_summary.forecasts.lstm.change > 0 %}positive{% else %}negative{% endif %}">
+                        {{ "%.2f"|format(forecast_summary.forecasts.lstm.change_pct) }}%
+                        {% if forecast_summary.forecasts.lstm.change > 0 %}▲{% else %}▼{% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% if 'ensemble' in forecast_summary.forecasts %}
+                <div class="summary-card">
+                    <h3>Ensemble Prediction</h3>
+                    <div class="value">${{ "%.2f"|format(forecast_summary.forecasts.ensemble.final) }}</div>
+                    <div class="change {% if forecast_summary.forecasts.ensemble.change > 0 %}positive{% else %}negative{% endif %}">
+                        {{ "%.2f"|format(forecast_summary.forecasts.ensemble.change_pct) }}%
+                        {% if forecast_summary.forecasts.ensemble.change > 0 %}▲{% else %}▼{% endif %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Model Legend -->
+            <div class="model-legend">
+                <div class="legend-item">
+                    <div class="legend-color legend-arima"></div>
+                    <span>ARIMA (Traditional)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-lstm"></div>
+                    <span>LSTM (Neural Network)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color legend-ensemble"></div>
+                    <span>Ensemble (Combined)</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Chart Section -->
+            {% if chart %}
+            <div class="chart-section">
+                {{ chart | safe }}
+            </div>
+            {% else %}
+            <div class="chart-section" style="text-align: center; padding: 60px; color: #999;">
+                <h3>📊 Select an instrument and horizon to generate forecast</h3>
+                <p style="margin-top: 10px;">Interactive candlestick chart with model predictions will appear here</p>
+            </div>
+            {% endif %}
+
+            <!-- Database Stats -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <div class="label">Historical Records</div>
+                    <div class="value">{{ db_stats.historical_records }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Predictions Stored</div>
+                    <div class="value">{{ db_stats.prediction_records }}</div>
+                </div>
+                <div class="stat-item">
+                    <div class="label">Instruments</div>
+                    <div class="value">{{ db_stats.instruments }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>CS4063 Financial Forecasting Application | ARIMA • LSTM • Ensemble Models</p>
+            <p style="margin-top: 5px; font-size: 0.9em;">Built with Flask, TensorFlow, Statsmodels & Plotly</p>
+        </div>
+    </div>
+</body>
+</html>
+
