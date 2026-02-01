@@ -41,7 +41,7 @@ A full-stack web application for forecasting financial instruments (stocks and c
 
 ### Prerequisites
 
-- Python 3.10 or higher
+- Python 3.10, 3.11, or 3.12 (TensorFlow not yet compatible with 3.13+)
 - pip package manager
 - Virtual environment (recommended)
 
@@ -284,11 +284,48 @@ export SECRET_KEY=your-secure-secret-key
 
 ## 📚 Documentation
 
-- [Installation Guide](docs/installation.md)
-- [User Guide](docs/user-guide.md)
-- [API Reference](docs/api.md)
-- [Model Documentation](docs/models.md)
 - [Data Scraper Guide](data_scraper/README.md)
+
+## ⚠️ Troubleshooting
+
+### TensorFlow Installation Issues
+
+**Problem**: TensorFlow not installing or `No matching distribution found`
+
+**Solution**: TensorFlow requires Python 3.12 or lower. If you're using Python 3.13+:
+
+```bash
+# Option 1: Use Python 3.12
+# Download from python.org and use:
+python3.12 -m venv venv
+venv\Scripts\activate  # Windows
+pip install -r requirements.txt
+
+# Option 2: Install CPU version
+pip install tensorflow-cpu>=2.15.0
+
+# Option 3: Skip TensorFlow (ARIMA only)
+# Comment out tensorflow in requirements.txt
+# Note: LSTM forecasts won't work without TensorFlow
+```
+
+### Database Not Initialized
+
+**Problem**: "Database not found" or empty predictions
+
+**Solution**: 
+1. Open http://127.0.0.1:5000
+2. Click "Initialize Database" button
+3. Wait for data to load
+
+### Port Already in Use
+
+**Problem**: "Address already in use" error
+
+**Solution**: Change port in `run.py`:
+```python
+app.run(debug=True, host='127.0.0.1', port=5001)
+```
 
 ## 🤝 Contributing
 
