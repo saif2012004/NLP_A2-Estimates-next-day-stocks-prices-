@@ -4,9 +4,6 @@ __pycache__/
 *$py.class
 *.so
 .Python
-env/
-venv/
-ENV/
 build/
 develop-eggs/
 dist/
@@ -23,20 +20,27 @@ wheels/
 .installed.cfg
 *.egg
 
-# Virtual environments
+# Virtual Environment
 venv/
-ENV/
 env/
-.venv
+ENV/
+env.bak/
+venv.bak/
 
-# PyCharm
-.idea/
-
-# VS Code
+# IDEs
 .vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# Flask
+instance/
+.webassets-cache
 
 # Database
 *.db
@@ -47,23 +51,25 @@ env/
 .pytest_cache/
 .coverage
 htmlcov/
-
-# OS
-.DS_Store
-Thumbs.db
-*.swp
-*.swo
-*~
-
-# Logs
-*.log
+.tox/
 
 # Environment variables
 .env
 .env.local
 
-# Temporary files
-*.tmp
-temp/
-tmp/
+# Logs
+*.log
 
+# Model files (if they get too large)
+*.h5
+*.pkl
+*.joblib
+
+# Data files (uncomment if you don't want to track CSVs)
+# *.csv
+
+# OS
+Thumbs.db
+
+# Portfolio internal documentation (not for public repo)
+PORTFOLIO_GUIDE.md

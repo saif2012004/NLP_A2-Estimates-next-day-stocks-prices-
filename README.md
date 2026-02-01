@@ -1,339 +1,326 @@
-# CS4063 Financial Forecasting Application
+# 📈 Financial Forecasting Application
 
-A Flask-based web application for forecasting financial instruments (AAPL, MSFT, BTC-USD) using traditional (ARIMA) and deep learning (LSTM) models with ensemble predictions.
+A full-stack web application for forecasting financial instruments (stocks and cryptocurrencies) using traditional statistical models (ARIMA), deep learning (LSTM), and ensemble methods. Built with Flask, TensorFlow, and Plotly.
 
-## 📋 Features
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Flask](https://img.shields.io/badge/Flask-3.0%2B-green.svg)](https://flask.palletsprojects.com/)
+[![TensorFlow](https://img.shields.io/badge/TensorFlow-2.15%2B-orange.svg)](https://www.tensorflow.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-- **Multi-Model Forecasting**: ARIMA (traditional), LSTM (neural network), and Ensemble predictions
-- **Interactive Visualization**: Candlestick charts with Plotly for OHLC data and forecast overlays
-- **Multiple Instruments**: AAPL (Apple), MSFT (Microsoft), BTC-USD (Bitcoin)
+![Demo Screenshot](docs/screenshot.png)
+
+## 🌟 Features
+
+- **Multi-Model Forecasting**: ARIMA, LSTM, and Ensemble predictions
+- **Interactive Visualizations**: Candlestick charts with Plotly
+- **Multiple Instruments**: Stocks (AAPL, MSFT) and Cryptocurrency (BTC-USD)
 - **Flexible Horizons**: 1, 3, 7, and 14-day forecasts
-- **Database Integration**: SQLite for historical data and predictions storage
+- **Database Integration**: SQLite for data persistence
 - **Performance Metrics**: RMSE, MAE, MAPE evaluation
+- **Data Collection Module**: Automated financial data scraper
 
-## 🏗️ Project Structure
+## 🏗️ Architecture
 
 ```
-forecasting_app/
-├── app.py                 # Flask application (main entry point)
-├── models.py              # ARIMA, LSTM, Ensemble forecasting models
-├── db.py                  # SQLite database management (SQLAlchemy)
-├── utils.py               # Data loading and preprocessing utilities
-├── templates/             # HTML templates
-│   ├── index.html         # Main dashboard
-│   ├── stats.html         # Database statistics
-│   ├── 404.html           # Error page
-│   └── 500.html           # Server error page
-├── __init__.py
-data/                      # CSV datasets directory
-├── AAPL_20250915_185850.csv
-├── MSFT_20250915_185853.csv
-└── BTC-USD_20250915_185857.csv
-tests/                     # Unit tests
-docs/                      # Documentation
-requirements.txt           # Python dependencies
-forecasting.db            # SQLite database (created on init)
+├── forecasting_app/          # Main application
+│   ├── app.py                # Flask web server
+│   ├── models.py             # ARIMA, LSTM, Ensemble models
+│   ├── db.py                 # Database management
+│   ├── utils.py              # Data utilities
+│   └── templates/            # HTML templates
+├── data_scraper/             # Data collection module
+│   ├── financial_data_scraper.py
+│   ├── interactive_scraper.py
+│   └── README.md
+├── data/                     # CSV datasets
+├── tests/                    # Unit tests
+└── requirements.txt          # Dependencies
 ```
 
-## 🚀 Quick Start Guide
+## 🚀 Quick Start
 
-### 1. Prerequisites
+### Prerequisites
 
-- Python 3.13 (or 3.10+)
+- Python 3.10 or higher
 - pip package manager
-- CSV data files (place in `data/` directory)
+- Virtual environment (recommended)
 
-### 2. Installation
+### Installation
+
+1. **Clone the repository**
 
 ```bash
-# Navigate to project directory
-cd "E:\7 semester\NLP\A2"
+git clone https://github.com/yourusername/financial-forecasting.git
+cd financial-forecasting
+```
 
-# Install dependencies
+2. **Create virtual environment** (recommended)
+
+```bash
+# Windows
+python -m venv venv
+venv\Scripts\activate
+
+# Linux/Mac
+python3 -m venv venv
+source venv/bin/activate
+```
+
+3. **Install dependencies**
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 3. Prepare Data
+4. **Prepare data**
 
-**Copy your CSV files to the `data/` directory:**
-
-```
-E:\7 semester\NLP\A2\data\
-├── AAPL_20250915_185850.csv
-├── MSFT_20250915_185853.csv
-└── BTC-USD_20250915_185857.csv
-```
-
-### 4. Initialize Database
-
-**Option A: Via Web Interface**
-
-1. Start the app (see step 5)
-2. Click "Initialize Database" button on the home page
-
-**Option B: Via Command Line**
+Place your CSV files in the `data/` directory or use the data scraper:
 
 ```bash
-python -c "from forecasting_app.db import init_db; init_db('data')"
+cd data_scraper
+python financial_data_scraper.py
 ```
 
-### 5. Run Application
+5. **Run the application**
 
 ```bash
-# Start Flask development server
+# Windows
+python run.py
+
+# Or directly
 python forecasting_app/app.py
 ```
 
-**Access the application:**
+6. **Initialize database**
 
 - Open browser: http://127.0.0.1:5000
-- Main dashboard: `/`
-- Statistics: `/stats`
-- Initialize DB: `/init-db`
+- Click "Initialize Database" button
+- Start forecasting!
 
-### 6. Using the Application
-
-1. **Select Instrument**: Choose from AAPL, MSFT, or BTC-USD
-2. **Select Horizon**: Choose forecast period (1, 3, 7, or 14 days)
-3. **Generate Forecast**: Click the button to run all three models
-4. **View Results**:
-   - Interactive candlestick chart with historical OHLC data
-   - Forecast lines overlay (ARIMA, LSTM, Ensemble)
-   - Prediction summary cards with percentage changes
-   - Zoom, pan, and hover for detailed inspection
-
-## 📊 Models Explanation
+## 📊 Models
 
 ### ARIMA (AutoRegressive Integrated Moving Average)
 
 - **Type**: Traditional statistical model
-- **Input**: Univariate time series (Close prices only)
-- **Order**: (5, 1, 0)
-  - p=5: Uses last 5 days (autoregressive)
-  - d=1: First-order differencing (stationary)
-  - q=0: No moving average component
-- **Strengths**: Good for linear trends, fast computation
-- **Use Case**: Short-term predictions, baseline model
+- **Input**: Univariate time series (Close prices)
+- **Order**: (5, 1, 0) - 5 lags, 1st differencing
+- **Use Case**: Baseline predictions, linear trends
 
 ### LSTM (Long Short-Term Memory)
 
 - **Type**: Deep learning neural network
-- **Input**: Multi-feature (Close, MA_5, MA_20, Volatility, Avg_Sentiment, Daily_Return)
-- **Architecture**:
-  - LSTM Layer (50 units)
-  - Dropout (0.2)
-  - Dense Layer (25 units)
-  - Output (1 unit)
-- **Strengths**: Captures non-linear patterns, leverages multiple features
-- **Use Case**: Complex market conditions, feature-rich predictions
+- **Input**: Multi-feature (Close, MA_5, MA_20, Volatility, Sentiment, Daily_Return)
+- **Architecture**: LSTM(50) → Dropout(0.2) → Dense(25) → Output(1)
+- **Use Case**: Complex patterns, feature-rich predictions
 
 ### Ensemble Model
 
 - **Type**: Hybrid approach
-- **Method**: Weighted average of ARIMA and LSTM
-- **Default Weights**: 50% ARIMA + 50% LSTM
-- **Strengths**: Reduces variance, improves robustness
-- **Use Case**: Production forecasts, balanced predictions
+- **Method**: Weighted average (50% ARIMA + 50% LSTM)
+- **Use Case**: Robust predictions, production forecasts
 
-## 📈 Performance Metrics
+## 📈 Usage
 
-The system evaluates models using:
+### Web Interface
 
-1. **RMSE (Root Mean Squared Error)**
+1. **Select Instrument**: Choose AAPL, MSFT, or BTC-USD
+2. **Select Horizon**: Choose forecast period (1, 3, 7, or 14 days)
+3. **Generate Forecast**: Click to run all three models
+4. **View Results**: Interactive candlestick chart with predictions
 
-   - Formula: √(Σ(predicted - actual)² / n)
-   - Lower is better
-   - Penalizes large errors
-
-2. **MAE (Mean Absolute Error)**
-
-   - Formula: Σ|predicted - actual| / n
-   - Lower is better
-   - Robust to outliers
-
-3. **MAPE (Mean Absolute Percentage Error)**
-   - Formula: (Σ|predicted - actual| / |actual|) / n × 100%
-   - Lower is better
-   - Scale-independent (percentage)
-
-## 🧪 Testing
-
-### Run Unit Tests
-
-```bash
-# Test all modules
-pytest forecasting_app/ -v
-
-# Test specific modules
-pytest forecasting_app/models.py -v
-pytest forecasting_app/db.py -v
-
-# Run with coverage
-pytest forecasting_app/ -v --cov=forecasting_app
-```
-
-### Manual Testing
-
-```bash
-# Test data loading
-python forecasting_app/utils.py
-
-# Test database operations
-python forecasting_app/db.py
-
-# Test forecasting models
-python forecasting_app/models.py
-```
-
-## 🎨 Visualization Features
-
-### Candlestick Chart
-
-- **Historical OHLC**: Last 90 days of price action
-- **Green/Red Candles**: Up/down days visualization
-- **Interactive**: Zoom, pan, hover tooltips
-
-### Forecast Overlays
-
-- **ARIMA**: Red dashed line with circle markers
-- **LSTM**: Teal dotted line with square markers
-- **Ensemble**: Blue solid line with diamond markers
-- **Vertical Separator**: Gray line marking forecast start
-- **Future Dates**: Extended x-axis for predictions
-
-### Summary Cards
-
-- **Current Price**: Last known Close price
-- **Model Predictions**: Final forecast values
-- **Change Indicators**: Percentage change with up/down arrows
-- **Color Coding**: Green (positive), Red (negative)
-
-## 📁 Database Schema
-
-### Historical Table
-
-- **Columns**: instrument, date, open, high, low, close, volume
-- **Features**: MA_5, MA_20, Volatility, Avg_Sentiment, Daily_Return, RSI, MACD
-- **Indexes**: (instrument, date) composite primary key
-- **Purpose**: Store curated CSV data for training
-
-### Predictions Table
-
-- **Columns**: instrument, prediction_date, target_date, model_type, predicted_close, horizon
-- **Confidence**: lower_bound, upper_bound (optional)
-- **Indexes**: (instrument, model_type, horizon)
-- **Purpose**: Store and retrieve model forecasts
-
-## 🔧 Troubleshooting
-
-### Issue: Database not initialized
-
-**Solution**: Visit `/init-db` route or run:
-
-```bash
-python -c "from forecasting_app.db import init_db; init_db('data')"
-```
-
-### Issue: CSV files not found
-
-**Solution**: Ensure CSV files are in `data/` directory with exact filenames:
-
-- `AAPL_20250915_185850.csv`
-- `MSFT_20250915_185853.csv`
-- `BBTC-USD_20250915_185857.csv`
-
-### Issue: TensorFlow/LSTM errors
-
-**Solution**: Reduce epochs or look_back:
+### Programmatic Usage
 
 ```python
-lstm_forecast(df, horizon=7, look_back=30, epochs=20)
-```
-
-### Issue: ARIMA convergence warnings
-
-**Solution**: Try different order parameters:
-
-```python
-arima_forecast(df, horizon=7, order=(3, 1, 0))
-```
-
-## 📝 Assignment Deliverables Checklist
-
-- ✅ **Front-end**: Flask web interface with instrument/horizon selection
-- ✅ **Back-end DB**: SQLite with historical data and predictions
-- ✅ **Traditional Model**: ARIMA implementation with statsmodels
-- ✅ **Neural Model**: LSTM with TensorFlow/Keras and multi-features
-- ✅ **Ensemble Model**: Combined ARIMA + LSTM predictions
-- ✅ **Visualization**: Candlestick charts with forecast overlays (Plotly)
-- ✅ **Metrics**: RMSE, MAE, MAPE evaluation
-- ✅ **Software Engineering**: Git, modularity, documentation, tests
-- ✅ **Open-Source**: No paid APIs, all free libraries
-- ✅ **Curated Datasets**: CSV files as data source
-
-## 🔬 Model Evaluation
-
-To evaluate models on test data:
-
-```python
-from forecasting_app.models import evaluate_models
+from forecasting_app.models import arima_forecast, lstm_forecast, ensemble_forecast
 from forecasting_app.utils import load_data
 
 # Load data
 data = load_data('data')
 df = data['AAPL']
 
-# Evaluate with 80/20 split
-results = evaluate_models(df, test_size=0.2, horizon=7)
+# Generate forecasts
+arima_pred = arima_forecast(df, horizon=7)
+lstm_pred = lstm_forecast(df, horizon=7)
+ensemble_pred = ensemble_forecast(df, horizon=7)
 
-print(f"ARIMA RMSE: {results['arima']['rmse']:.2f}")
-print(f"LSTM MAPE: {results['lstm']['mape']:.2f}%")
-print(f"Ensemble MAE: {results['ensemble']['mae']:.2f}")
+print(f"7-day ARIMA forecast: {arima_pred}")
+print(f"7-day LSTM forecast: {lstm_pred}")
+print(f"7-day Ensemble forecast: {ensemble_pred}")
 ```
 
-## 📚 Dependencies
+### Model Evaluation
 
-- **Flask 3.0+**: Web framework
-- **Pandas 2.2+**: Data manipulation
-- **NumPy 1.26+**: Numerical computing
-- **SQLAlchemy 2.0+**: ORM for database
-- **Statsmodels 0.14+**: ARIMA models
-- **TensorFlow 2.15+**: LSTM neural networks
-- **Plotly 5.18+**: Interactive visualizations
-- **Scikit-learn 1.3+**: Preprocessing and metrics
+```python
+from forecasting_app.models import evaluate_models
 
-## 🌐 Production Deployment
+# Evaluate with 80/20 train-test split
+results = evaluate_models(df, test_size=0.2, horizon=7)
 
-For production use:
+print(f"ARIMA - RMSE: {results['arima']['rmse']:.2f}, MAPE: {results['arima']['mape']:.2f}%")
+print(f"LSTM - RMSE: {results['lstm']['rmse']:.2f}, MAPE: {results['lstm']['mape']:.2f}%")
+print(f"Ensemble - RMSE: {results['ensemble']['rmse']:.2f}, MAPE: {results['ensemble']['mape']:.2f}%")
+```
+
+## 🧪 Testing
+
+Run unit tests:
+
+```bash
+# All tests
+pytest tests/ -v
+
+# With coverage
+pytest tests/ -v --cov=forecasting_app
+
+# Specific module
+pytest tests/test_models.py -v
+```
+
+## 📁 Data Collection
+
+The project includes a data scraper module to collect financial data:
+
+```bash
+cd data_scraper
+
+# Batch mode (pre-configured symbols)
+python financial_data_scraper.py
+
+# Interactive mode
+python interactive_scraper.py
+```
+
+Features collected:
+- Price data (OHLC)
+- Volume
+- Technical indicators (MA, Volatility, RSI, MACD)
+- Sentiment analysis from news
+- Daily returns
+
+## 🎨 Visualization
+
+- **Candlestick Charts**: Historical OHLC data
+- **Forecast Overlays**: 
+  - 🔴 ARIMA: Red dashed line
+  - 🟢 LSTM: Teal dotted line
+  - 🔵 Ensemble: Blue solid line
+- **Interactive**: Zoom, pan, hover tooltips
+- **Summary Cards**: Predictions with percentage changes
+
+## 📊 Performance Metrics
+
+| Metric | Description | Interpretation |
+|--------|-------------|----------------|
+| **RMSE** | Root Mean Squared Error | Lower is better, penalizes large errors |
+| **MAE** | Mean Absolute Error | Lower is better, average error |
+| **MAPE** | Mean Absolute Percentage Error | Lower is better, scale-independent (%) |
+
+## 🛠️ Tech Stack
+
+| Category | Technology |
+|----------|-----------|
+| **Backend** | Flask 3.0+ |
+| **Database** | SQLite, SQLAlchemy 2.0+ |
+| **ML/Statistical** | Statsmodels (ARIMA) |
+| **Deep Learning** | TensorFlow 2.15+, Keras |
+| **Data Processing** | Pandas, NumPy |
+| **Visualization** | Plotly, Matplotlib |
+| **Data Collection** | yfinance, BeautifulSoup, TextBlob |
+| **Testing** | pytest |
+
+## 📝 Project Structure Details
+
+### forecasting_app/
+
+- `app.py` - Flask application with routes and UI
+- `models.py` - Forecasting models (ARIMA, LSTM, Ensemble)
+- `db.py` - Database operations with SQLAlchemy
+- `utils.py` - Data loading and preprocessing
+- `templates/` - HTML templates with Jinja2
+
+### data_scraper/
+
+- `financial_data_scraper.py` - Main scraper class
+- `interactive_scraper.py` - CLI interface
+- `README.md` - Scraper documentation
+
+### data/
+
+- CSV files with historical price data
+- Features: OHLC, Volume, MA, Volatility, Sentiment
+
+## 🔧 Configuration
+
+Environment variables (optional):
+
+```bash
+FLASK_ENV=development
+FLASK_DEBUG=True
+DATABASE_URL=sqlite:///forecasting.db
+SECRET_KEY=your-secret-key
+```
+
+## 🚀 Deployment
+
+For production deployment:
 
 1. **Use production WSGI server**:
 
-   ```bash
-   pip install gunicorn
-   gunicorn -w 4 -b 0.0.0.0:8000 forecasting_app.app:app
-   ```
+```bash
+pip install gunicorn
+gunicorn -w 4 -b 0.0.0.0:8000 forecasting_app.app:app
+```
 
 2. **Set environment variables**:
 
-   ```bash
-   export FLASK_ENV=production
-   export SECRET_KEY=your-secure-secret-key
-   ```
+```bash
+export FLASK_ENV=production
+export SECRET_KEY=your-secure-secret-key
+```
 
-3. **Configure proper database**: Consider PostgreSQL for production
-4. **Enable HTTPS**: Use SSL certificates
-5. **Add authentication**: Implement user login if needed
+3. **Consider PostgreSQL** for production database
+4. **Enable HTTPS** with SSL certificates
+5. **Add authentication** if needed
+
+## 📚 Documentation
+
+- [Installation Guide](docs/installation.md)
+- [User Guide](docs/user-guide.md)
+- [API Reference](docs/api.md)
+- [Model Documentation](docs/models.md)
+- [Data Scraper Guide](data_scraper/README.md)
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
 ## 📄 License
 
-MIT License - Educational Project for CS4063
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👨‍💻 Author
 
-CS4063 Student - Financial Forecasting Assignment
+**Your Name**
+- Portfolio: [yourportfolio.com](https://yourportfolio.com)
+- LinkedIn: [Your LinkedIn](https://linkedin.com/in/yourprofile)
+- GitHub: [@yourusername](https://github.com/yourusername)
 
 ## 🙏 Acknowledgments
 
 - Open-source libraries: Flask, TensorFlow, Statsmodels, Plotly
-- Dataset sources: Historical OHLC data with engineered features
-- Assignment specifications: CS4063 course requirements
+- Financial data sources: Yahoo Finance
+- Inspired by modern FinTech applications
+
+## 📞 Support
+
+For support, email your.email@example.com or open an issue on GitHub.
+
+---
+
+**⭐ If you found this project helpful, please consider giving it a star!**
